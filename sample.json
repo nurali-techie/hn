@@ -1,0 +1,302 @@
+{
+    "hits": [
+      {
+        "created_at": "2021-07-18T12:06:56.000Z",
+        "title": "The promise of Cloud-Native games (2000)",
+        "url": "https://a16z.com/2020/01/14/cloud-native-games/",
+        "author": "Kinrany",
+        "points": 1,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626610016,
+        "_tags": [
+          "story",
+          "author_Kinrany",
+          "story_27872254"
+        ],
+        "objectID": "27872254",
+        "_highlightResult": {
+          "title": {
+            "value": "The promise of <em>Cloud</em>-Native games (2000)",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "url": {
+            "value": "https://a16z.com/2020/01/14/<em>cloud</em>-native-games/",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "author": {
+            "value": "Kinrany",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-18T10:56:49.000Z",
+        "title": "The strategic vulnerability facing the big three public cloud players",
+        "url": "https://blog.min.io/monoclouds-vs-multiclouds-hybridclouds/",
+        "author": "edogrider",
+        "points": 1,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626605809,
+        "_tags": [
+          "story",
+          "author_edogrider",
+          "story_27872004"
+        ],
+        "objectID": "27872004",
+        "_highlightResult": {
+          "title": {
+            "value": "The strategic vulnerability facing the big three public <em>cloud</em> players",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "url": {
+            "value": "https://blog.min.io/monoclouds-vs-multiclouds-hybridclouds/",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "author": {
+            "value": "edogrider",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-18T08:28:03.000Z",
+        "title": "Unlocking the Secrets of the World's Oldest Computer",
+        "url": "https://www.bbc.com/reel/video/p09pcwnz/unlocking-the-secrets-of-the-world-s-oldest-computer",
+        "author": "clouddrover",
+        "points": 2,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626596883,
+        "_tags": [
+          "story",
+          "author_clouddrover",
+          "story_27871538"
+        ],
+        "objectID": "27871538",
+        "_highlightResult": {
+          "title": {
+            "value": "Unlocking the Secrets of the World's Oldest Computer",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "url": {
+            "value": "https://www.bbc.com/reel/video/p09pcwnz/unlocking-the-secrets-of-the-world-s-oldest-computer",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "author": {
+            "value": "<em>cloud</em>drover",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-18T08:21:13.000Z",
+        "title": "CBL-Mariner: Linux distribution for Microsoft’s cloud and edge products services",
+        "url": "https://github.com/microsoft/CBL-Mariner",
+        "author": "teleforce",
+        "points": 1,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626596473,
+        "_tags": [
+          "story",
+          "author_teleforce",
+          "story_27871525"
+        ],
+        "objectID": "27871525",
+        "_highlightResult": {
+          "title": {
+            "value": "CBL-Mariner: Linux distribution for Microsoft’s <em>cloud</em> and edge products services",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "url": {
+            "value": "https://github.com/microsoft/CBL-Mariner",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "author": {
+            "value": "teleforce",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-18T07:57:29.000Z",
+        "title": "Zero Trust Samba with Cloudflare Private Routing",
+        "url": "https://blog.samrhea.com/posts/2021/zero-trust-samba",
+        "author": "jgrahamc",
+        "points": 2,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626595049,
+        "_tags": [
+          "story",
+          "author_jgrahamc",
+          "story_27871443"
+        ],
+        "objectID": "27871443",
+        "_highlightResult": {
+          "title": {
+            "value": "Zero Trust Samba with <em>Cloud</em>flare Private Routing",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "url": {
+            "value": "https://blog.samrhea.com/posts/2021/zero-trust-samba",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "author": {
+            "value": "jgrahamc",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-17T20:17:23.000Z",
+        "title": "What is Anycast? – How does Anycast work?",
+        "url": "https://www.cloudflare.com/learning/cdn/glossary/anycast-network/",
+        "author": "arkj",
+        "points": 1,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626553043,
+        "_tags": [
+          "story",
+          "author_arkj",
+          "story_27868473"
+        ],
+        "objectID": "27868473",
+        "_highlightResult": {
+          "title": {
+            "value": "What is Anycast? – How does Anycast work?",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "url": {
+            "value": "https://www.<em>cloud</em>flare.com/learning/cdn/glossary/anycast-network/",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "author": {
+            "value": "arkj",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      },
+      {
+        "created_at": "2021-07-17T20:10:49.000Z",
+        "title": "Rate-Limiting Strategies and Techniques",
+        "url": "https://cloud.google.com/architecture/rate-limiting-strategies-techniques",
+        "author": "arkj",
+        "points": 3,
+        "story_text": null,
+        "comment_text": null,
+        "num_comments": 0,
+        "story_id": null,
+        "story_title": null,
+        "story_url": null,
+        "parent_id": null,
+        "created_at_i": 1626552649,
+        "_tags": [
+          "story",
+          "author_arkj",
+          "story_27868426"
+        ],
+        "objectID": "27868426",
+        "_highlightResult": {
+          "title": {
+            "value": "Rate-Limiting Strategies and Techniques",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "url": {
+            "value": "https://<em>cloud</em>.google.com/architecture/rate-limiting-strategies-techniques",
+            "matchLevel": "full",
+            "fullyHighlighted": false,
+            "matchedWords": [
+              "cloud"
+            ]
+          },
+          "author": {
+            "value": "arkj",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      }
+    ],
+    "nbHits": 7,
+    "page": 0,
+    "nbPages": 1,
+    "hitsPerPage": 20,
+    "exhaustiveNbHits": true,
+    "query": "cloud",
+    "params": "advancedSyntax=true&analytics=true&analyticsTags=backend&numericFilters=created_at_i%3E1626552519%2Ccreated_at_i%3C1626638919&query=cloud&tags=story",
+    "processingTimeMS": 3
+  }
