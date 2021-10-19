@@ -18,12 +18,28 @@ func main() {
 
 	var err error
 
+	if len(os.Args) <= 1 {
+		Print("")
+		Print("Usage: hn <days> <comma seperated search terms>")
+		Print("Example:")
+		Print("\thn 5 golang")
+		Print("\thn 3 devops,java")
+		Print("\thn 2 \"open source\"")
+		Print("\thn 7 \"cloud native,microservices\"")
+		os.Exit(0)
+	}
+
 	var days int
 	if len(os.Args) > 1 {
 		days, err = strconv.Atoi(os.Args[1])
 		if err != nil {
 			Err("invalid days param %q", os.Args[1])
 			os.Exit(1)
+		}
+		if days < 1 {
+			Err("days param should be greater than 0")
+			os.Exit(1)
+
 		}
 	}
 

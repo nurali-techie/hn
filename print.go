@@ -30,3 +30,8 @@ func Info(msg string, args ...interface{}) {
 	infoMsg := fmt.Sprintf("INFO: %s\n", msg)
 	fmt.Printf(infoMsg, args...)
 }
+
+func Print(msg string, args ...interface{}) {
+	msg = fmt.Sprintf("%s\n", msg)
+	fmt.Printf(msg, args...)
+}
