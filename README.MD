@@ -2,6 +2,17 @@
 
 **hn** stands for `HackerNews`, it is a command line tool to query hacker news effectively as per user preference.
 
+# Usage
+
+```
+Usage: hn <days> <comma seperated search terms>
+Example:
+	hn 5 golang
+	hn 3 devops,java
+	hn 2 "open source"
+	hn 7 "cloud native,microservices"
+```
+
 # Install
 
 ```bash
