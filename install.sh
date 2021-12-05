@@ -7,10 +7,10 @@ uname_arch() {
     x86) arch="386" ;;
     i686) arch="386" ;;
     i386) arch="386" ;;
-    aarch64) arch="arm64" ;;
-    armv*) arch="armv6" ;;
-    armv*) arch="armv6" ;;
-    armv*) arch="armv6" ;;
+    # aarch64) arch="arm64" ;;
+    # armv*) arch="armv6" ;;
+    # armv*) arch="armv6" ;;
+    # armv*) arch="armv6" ;;
     esac
     echo ${arch}
 }

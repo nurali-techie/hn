@@ -9,8 +9,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+)
 
-	"github.com/nurali-techie/hn/config"
+const (
+	API_SEARCH_BY_DATE = "https://hn.algolia.com/api/v1/search_by_date"
+	API_SEARCH         = "https://hn.algolia.com/api/v1/search"
 )
 
 func main() {
@@ -20,6 +23,9 @@ func main() {
 
 	if len(os.Args) <= 1 {
 		Print("")
+		Print("Usage:")
+		Print("\thn 5 golang")
+		Print("\thn 3 devops,java")
 		Print("Usage: hn <days> <comma seperated search terms>")
 		Print("Example:")
 		Print("\thn 5 golang")
@@ -59,16 +65,22 @@ func search(days int, topics []string) {
 	past := now.AddDate(0, 0, -days)
 	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
-	searchUrl := fmt.Sprintf("%s?%s", config.API_SEARCH_BY_DATE, "tags=story&query=%s&numericFilters=created_at_i>%d,created_at_i<%d")
+	searchUrl := fmt.Sprintf("%s?%s", API_SEARCH_BY_DATE, "tags=story&query=%s&numericFilters=created_at_i>%d,created_at_i<%d&page=%d")
 
 	for _, topic := range topics {
-		url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), toSecond(past), toSecond(now))
-		items := call(url)
 		fmt.Println()
 		fmt.Printf("** %s **\n", topic)
-		for _, item := range items {
-			fmt.Printf("(%d) %s ", item.Points, item.Title)
-			PrintHyperLink(item.Url, "(link)")
+		for pageNo := 0; ; pageNo++ {
+			url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), toSecond(past), toSecond(now), pageNo)
+			items := call(url)
+			for _, item := range items {
+				fmt.Printf("(%d) %s ", item.Points, item.Title)
+				PrintHyperLink(item.Url, "(link)")
+			}
+			if len(items) < 20 {
+				break
+			}
+			fmt.Println("------")
 		}
 	}
 
