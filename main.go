@@ -17,7 +17,8 @@ const (
 )
 
 func main() {
-	fmt.Printf("Hello from HackerNews\n")
+	fmt.Printf("Hello from HackerNews ")
+	PrintHyperLink(`https://news.ycombinator.com/news`, "(link)")
 
 	var err error
 
@@ -68,19 +69,28 @@ func search(days int, topics []string) {
 	searchUrl := fmt.Sprintf("%s?%s", API_SEARCH_BY_DATE, "tags=story&query=%s&numericFilters=created_at_i>%d,created_at_i<%d&page=%d")
 
 	for _, topic := range topics {
+		totalPosts := 0
 		fmt.Println()
 		fmt.Printf("** %s **\n", topic)
 		for pageNo := 0; ; pageNo++ {
 			url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), toSecond(past), toSecond(now), pageNo)
 			items := call(url)
+			if len(items) == 0 {
+				break
+			}
 			for _, item := range items {
 				fmt.Printf("(%d) %s ", item.Points, item.Title)
-				PrintHyperLink(item.Url, "(link)")
+				url := item.Url
+				if url == "" {
+					url = fmt.Sprintf(`https://news.ycombinator.com/item?id=%s`, item.ObjectID)
+				}
+				PrintHyperLink(url, "(link)")
 			}
+			totalPosts += len(items)
+			fmt.Printf("------ page=%d, posts=%d ------\n", (pageNo + 1), totalPosts)
 			if len(items) < 20 {
 				break
 			}
-			fmt.Println("------")
 		}
 	}
 

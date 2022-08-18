@@ -9,9 +9,10 @@ type searchRes struct {
 }
 
 type item struct {
-	Title  string `json:"title"`
-	Url    string `json:"url"`
-	Points int    `json:"points"`
+	Title    string `json:"title"`
+	Url      string `json:"url"`
+	Points   int    `json:"points"`
+	ObjectID string `json:"objectID"`
 }
 
 func parse(body []byte) ([]*item, error) {
