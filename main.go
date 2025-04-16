@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -58,15 +59,71 @@ func main() {
 		}
 	}
 
-	search(days, topics)
+	sorted := true
+	if len(topics) > 0 {
+		searchByTopics(days, topics, sorted)
+	} else {
+		points := days
+		searchByPoints(points)
+	}
 }
 
-func search(days int, topics []string) {
+func searchByPoints(points int) {
+	days := 2
 	now := time.Now()
 	past := now.AddDate(0, 0, -days)
 	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
-	searchUrl := fmt.Sprintf("%s?%s", API_SEARCH_BY_DATE, "tags=story&query=%s&numericFilters=created_at_i>%d,created_at_i<%d&page=%d")
+	var searchUrl string
+	var startPoints, endPoints int
+	if points < 500 {
+		searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
+		startPoints = points
+		endPoints = points + 100
+	} else {
+		searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
+		startPoints = points
+		endPoints = points + 500
+	}
+
+	fmt.Println()
+	totalPosts := 0
+	sorted := true
+	for pageNo := 0; ; pageNo++ {
+		url := fmt.Sprintf(searchUrl, toSecond(past), toSecond(now), startPoints, endPoints, pageNo)
+		items := call(url)
+		if len(items) == 0 {
+			break
+		}
+
+		if sorted {
+			sort.Slice(items, func(i, j int) bool {
+				return items[i].Points > items[j].Points
+			})
+		}
+
+		for _, item := range items {
+			fmt.Printf("(%d) %s ", item.Points, item.Title)
+			url := item.Url
+			if url == "" {
+				url = fmt.Sprintf(`https://news.ycombinator.com/item?id=%s`, item.ObjectID)
+			}
+			PrintHyperLink(url, "(link)")
+		}
+		totalPosts += len(items)
+		fmt.Printf("------ page=%d, posts=%d ------\n", (pageNo + 1), totalPosts)
+		if len(items) < 20 {
+			break
+		}
+	}
+}
+
+func searchByTopics(days int, topics []string, sorted bool) {
+	now := time.Now()
+	past := now.AddDate(0, 0, -days)
+	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
+
+	searchUrl := fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&query="%s"&numericFilters=created_at_i>%d,created_at_i<%d&page=%d`)
 
 	for _, topic := range topics {
 		totalPosts := 0
@@ -78,6 +135,13 @@ func search(days int, topics []string) {
 			if len(items) == 0 {
 				break
 			}
+
+			if sorted {
+				sort.Slice(items, func(i, j int) bool {
+					return items[i].Points > items[j].Points
+				})
+			}
+
 			for _, item := range items {
 				fmt.Printf("(%d) %s ", item.Points, item.Title)
 				url := item.Url
@@ -97,6 +161,7 @@ func search(days int, topics []string) {
 }
 
 func call(url string) []*item {
+	// fmt.Println("url=", url)
 	client := http.Client{
 		Timeout: time.Second * 10,
 	}
