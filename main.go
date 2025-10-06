@@ -74,14 +74,16 @@ func searchByPoints(points int) {
 	past := now.AddDate(0, 0, -days)
 	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
-	var searchUrl string
+	// https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981,points%3E500,points%3C1000
+
+	// var searchUrl string
 	var startPoints, endPoints int
 	if points < 500 {
-		searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
+		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
 		endPoints = points + 100
 	} else {
-		searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
+		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
 		endPoints = points + 500
 	}
@@ -90,8 +92,14 @@ func searchByPoints(points int) {
 	totalPosts := 0
 	sorted := true
 	for pageNo := 0; ; pageNo++ {
-		url := fmt.Sprintf(searchUrl, toSecond(past), toSecond(now), startPoints, endPoints, pageNo)
-		items := call(url)
+		// urlPath := fmt.Sprintf(searchUrl, toSecond(past), toSecond(now), startPoints, endPoints, pageNo)
+
+		urlPath := API_SEARCH_BY_DATE +
+			fmt.Sprintf(`?tags=%s`, `story`) +
+			fmt.Sprintf(`&page=%d`, pageNo) +
+			fmt.Sprintf(`&numericFilters=%s`, url.QueryEscape(fmt.Sprintf(`created_at_i>%d,created_at_i<%d,points>%d,points<%d`, toSecond(past), toSecond(now), startPoints, endPoints)))
+
+		items := call(urlPath)
 		if len(items) == 0 {
 			break
 		}
@@ -123,15 +131,21 @@ func searchByTopics(days int, topics []string, sorted bool) {
 	past := now.AddDate(0, 0, -days)
 	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
-	searchUrl := fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&query="%s"&numericFilters=created_at_i>%d,created_at_i<%d&page=%d`)
+	// searchUrl := fmt.Sprintf(`%s?%s%s`, API_SEARCH_BY_DATE, `tags=story&page=%d&`, url.QueryEscape(`query="%s"&numericFilters=created_at_i>%d,created_at_i<%d`))
 
 	for _, topic := range topics {
 		totalPosts := 0
 		fmt.Println()
 		fmt.Printf("** %s **\n", topic)
 		for pageNo := 0; ; pageNo++ {
-			url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), toSecond(past), toSecond(now), pageNo)
-			items := call(url)
+			// url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), pageNo, toSecond(past), toSecond(now))
+			urlPath := API_SEARCH_BY_DATE +
+				fmt.Sprintf(`?tags=%s`, `story`) +
+				fmt.Sprintf(`&page=%d`, pageNo) +
+				fmt.Sprintf(`&query=%s`, url.QueryEscape(topic)) +
+				fmt.Sprintf(`&numericFilters=%s`, url.QueryEscape(fmt.Sprintf(`created_at_i>%d,created_at_i<%d`, toSecond(past), toSecond(now))))
+
+			items := call(urlPath)
 			if len(items) == 0 {
 				break
 			}
@@ -142,16 +156,30 @@ func searchByTopics(days int, topics []string, sorted bool) {
 				})
 			}
 
+			printFooter := false
 			for _, item := range items {
-				fmt.Printf("(%d) %s ", item.Points, item.Title)
-				url := item.Url
-				if url == "" {
-					url = fmt.Sprintf(`https://news.ycombinator.com/item?id=%s`, item.ObjectID)
+				if days == 1 {
+					if item.Points >= 20 {
+						printItem(item)
+						printFooter = true
+					}
+				} else if days == 2 {
+					if item.Points >= 10 {
+						printItem(item)
+						printFooter = true
+					}
+				} else {
+					printItem(item)
+					printFooter = true
 				}
-				PrintHyperLink(url, "(link)")
 			}
+
 			totalPosts += len(items)
-			fmt.Printf("------ page=%d, posts=%d ------\n", (pageNo + 1), totalPosts)
+
+			if printFooter {
+				fmt.Printf("------ page=%d, posts=%d ------\n", (pageNo + 1), totalPosts)
+			}
+
 			if len(items) < 20 {
 				break
 			}
@@ -160,13 +188,33 @@ func searchByTopics(days int, topics []string, sorted bool) {
 
 }
 
-func call(url string) []*item {
-	// fmt.Println("url=", url)
+func printItem(item *item) {
+	fmt.Printf("(%d) %s ", item.Points, item.Title)
+	url := item.Url
+	if url == "" {
+		url = fmt.Sprintf(`https://news.ycombinator.com/item?id=%s`, item.ObjectID)
+	}
+	PrintHyperLink(url, "(link)")
+}
+
+func call(urlPath string) []*item {
+	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&query=%22java%22&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981&page=0`
+
+	// fmt.Println("url=", urlPath)
+	// urlPart := strings.Split(urlPath, `?`)
+	// urlPath = fmt.Sprintf(`%s?%s`, urlPart[0], url.QueryEscape(urlPart[1]))
+	// fmt.Println("url=", urlPath)
+
+	// fmt.Println("url=", urlPath)
+	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&query=%22java%22&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981&page=0`
+	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&query=%22java%22&numericFilters=created_at_i%3E1745695548,created_at_i%3C1745868348`
+	// fmt.Println("url=", urlPath)
+
 	client := http.Client{
 		Timeout: time.Second * 10,
 	}
 
-	resp, err := client.Get(url)
+	resp, err := client.Get(urlPath)
 	if err != nil {
 		Err("search failed with error, %v", err)
 		os.Exit(1)
