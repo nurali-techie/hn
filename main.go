@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
@@ -31,7 +32,7 @@ func main() {
 		Print("\thn 5 \"open source\"	// use dobule-quotes for search terms with multiple words")
 		Print("")
 		Print("Usage: hn <points>")
-		Print("\thn 200			// search any news with 200-300 points")
+		Print("\thn 200			// search any news with 200 to 300 points")
 		Print("\thn 500			// search any news with 500+ points")
 		os.Exit(0)
 	}
@@ -71,7 +72,6 @@ func searchByPoints(points int) {
 	days := 2
 	now := time.Now()
 	past := now.AddDate(0, 0, -days)
-	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
 	// https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981,points%3E500,points%3C1000
 
@@ -81,10 +81,12 @@ func searchByPoints(points int) {
 		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
 		endPoints = points + 100
+		Info("searching from last %d days, between %d to %d points", days, startPoints, endPoints)
 	} else {
 		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
-		endPoints = points + 500
+		endPoints = math.MaxInt
+		Info("searching from last %d days, %d+ points", days, startPoints)
 	}
 
 	fmt.Println()
