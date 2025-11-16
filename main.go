@@ -25,15 +25,14 @@ func main() {
 
 	if len(os.Args) <= 1 {
 		Print("")
-		Print("Usage:")
-		Print("\thn 5 golang")
-		Print("\thn 3 devops,java")
 		Print("Usage: hn <days> <comma seperated search terms>")
-		Print("Example:")
-		Print("\thn 5 golang")
-		Print("\thn 3 devops,java")
-		Print("\thn 2 \"open source\"")
-		Print("\thn 7 \"cloud native,microservices\"")
+		Print("\thn 3 golang		// search golang topic for last 3 days")
+		Print("\thn 2 ai,llm		// search ai and llm topics for last 2 days")
+		Print("\thn 5 \"open source\"	// use dobule-quotes for search terms with multiple words")
+		Print("")
+		Print("Usage: hn <points>")
+		Print("\thn 200			// search any news with 200-300 points")
+		Print("\thn 500			// search any news with 500+ points")
 		os.Exit(0)
 	}
 
