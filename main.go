@@ -22,50 +22,58 @@ func main() {
 	fmt.Printf("Hello from HackerNews ")
 	PrintHyperLink(`https://news.ycombinator.com/news`, "(link)")
 
-	var err error
-
-	if len(os.Args) <= 1 {
-		Print("")
-		Print("Usage: hn <days> <comma seperated search terms>")
-		Print("\thn 3 golang		// search golang topic for last 3 days")
-		Print("\thn 2 ai,llm		// search ai and llm topics for last 2 days")
-		Print("\thn 5 \"open source\"	// use dobule-quotes for search terms with multiple words")
-		Print("")
-		Print("Usage: hn <points>")
-		Print("\thn 200			// search any news with 200 to 300 points")
-		Print("\thn 500			// search any news with 500+ points")
-		os.Exit(0)
-	}
-
-	var days int
-	if len(os.Args) > 1 {
-		days, err = strconv.Atoi(os.Args[1])
+	switch len(os.Args) {
+	case 1: // hn
+		printHelp()
+	case 2: // hn 100
+		points, err := strconv.Atoi(os.Args[1])
 		if err != nil {
-			Err("invalid days param %q", os.Args[1])
+			Err("invalid value for points %q, points should be number", os.Args[1])
+			os.Exit(1)
+		}
+		if points < 1 {
+			points = 100
+		}
+		searchByPoints(points)
+	case 3, 4: // hn 1 ai -a
+		days, err := strconv.Atoi(os.Args[1])
+		if err != nil {
+			Err("invalid value for days %q, days should be number", os.Args[1])
 			os.Exit(1)
 		}
 		if days < 1 {
-			Err("days param should be greater than 0")
-			os.Exit(1)
-
+			days = 1
 		}
-	}
-
-	var topics []string
-	if len(os.Args) > 2 {
-		query := os.Args[2]
-		if query != "" {
-			topics = strings.Split(query, ",")
+		topics := strings.Split(os.Args[2], ",")
+		minPoints := 10
+		if len(os.Args) == 4 {
+			if os.Args[3] != "-a" {
+				Err("invalid value for last param, it must be -a")
+				os.Exit(1)
+			}
+			minPoints = 1
 		}
+		searchByTopics(days, topics, minPoints)
+	default:
+		Err("Error: Invalid input having extra values")
+		printHelp()
 	}
+}
 
-	sorted := true
-	if len(topics) > 0 {
-		searchByTopics(days, topics, sorted)
-	} else {
-		points := days
-		searchByPoints(points)
-	}
+func printHelp() {
+	Print("")
+	Print("Usage: hn <days> <comma seperated search topics>")
+	Print("\thn 3 golang		// search golang topic for last 3 days (with 10+ points)")
+	Print("\thn 2 ai,llm		// search ai and llm topics for last 2 days (with 10+ points)")
+	Print("\thn 5 \"open source\"	// use dobule-quotes for search topic having multiple words")
+	Print("")
+	Print("Usage: hn <days> <comma seperated search topics> -a")
+	Print("\thn 3 golang -a		// search golang topic for last 3 days (with 1+ points)")
+	Print("")
+	Print("Usage: hn <points>")
+	Print("\thn 200			// search any news from last 2 days with 200 to 300 points")
+	Print("\thn 500			// search any news from last 2 days with 500+ points")
+	Print("\thn 600			// search any news from last 2 days with 600+ points")
 }
 
 func searchByPoints(points int) {
@@ -127,10 +135,11 @@ func searchByPoints(points int) {
 	}
 }
 
-func searchByTopics(days int, topics []string, sorted bool) {
+func searchByTopics(days int, topics []string, minPoints int) {
+	Info("searching from last %d days, for topics %v, with %d+ points", days, topics, minPoints)
+
 	now := time.Now()
 	past := now.AddDate(0, 0, -days)
-	Info("searching for %d days, from %s to %s date", days, DateToString(past), DateToString(now))
 
 	// searchUrl := fmt.Sprintf(`%s?%s%s`, API_SEARCH_BY_DATE, `tags=story&page=%d&`, url.QueryEscape(`query="%s"&numericFilters=created_at_i>%d,created_at_i<%d`))
 
@@ -151,25 +160,13 @@ func searchByTopics(days int, topics []string, sorted bool) {
 				break
 			}
 
-			if sorted {
-				sort.Slice(items, func(i, j int) bool {
-					return items[i].Points > items[j].Points
-				})
-			}
+			sort.Slice(items, func(i, j int) bool {
+				return items[i].Points > items[j].Points
+			})
 
 			printFooter := false
 			for _, item := range items {
-				if days == 1 {
-					if item.Points >= 20 {
-						printItem(item)
-						printFooter = true
-					}
-				} else if days == 2 {
-					if item.Points >= 10 {
-						printItem(item)
-						printFooter = true
-					}
-				} else {
+				if item.Points >= minPoints {
 					printItem(item)
 					printFooter = true
 				}
