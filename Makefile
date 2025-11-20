@@ -18,6 +18,7 @@ go-mod:		## run go module specific commands, 'tidy' and 'verify'.
 	go mod verify
 
 release:	## build and create 'hn' tool executable at './install/'.
+	mkdir -p install/linux install/macos install/windows
 	GOOS=linux GOARCH=amd64 go build -o install/linux/hn
 	GOOS=darwin GOARCH=amd64 go build -o install/macos/hn
 	GOOS=windows GOARCH=amd64 go build -o install/windows/hn.exe
