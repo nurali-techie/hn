@@ -22,7 +22,7 @@ func DateToString(t time.Time) string {
 }
 
 func Err(msg string, args ...interface{}) {
-	errMsg := fmt.Sprintf("ERR: %s\n", msg)
+	errMsg := fmt.Sprintf("ERROR: %s\n", msg)
 	fmt.Printf(errMsg, args...)
 }
 

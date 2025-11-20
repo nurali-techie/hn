@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math"
-	"net/http"
 	"net/url"
 	"os"
 	"sort"
@@ -25,7 +23,7 @@ func main() {
 	switch len(os.Args) {
 	case 1: // hn
 		printHelp()
-	case 2: // hn 100
+	case 2: // hn 200
 		points, err := strconv.Atoi(os.Args[1])
 		if err != nil {
 			Err("invalid value for points %q, points should be number", os.Args[1])
@@ -35,7 +33,7 @@ func main() {
 			points = 100
 		}
 		searchByPoints(points)
-	case 3, 4: // hn 1 ai -a
+	case 3, 4: // hn 3 golang / hn 3 golang -a
 		days, err := strconv.Atoi(os.Args[1])
 		if err != nil {
 			Err("invalid value for days %q, days should be number", os.Args[1])
@@ -62,18 +60,17 @@ func main() {
 
 func printHelp() {
 	Print("")
-	Print("Usage: hn <days> <comma seperated search topics>")
+	Print("Usage-1: hn <days> <comma seperated search topics>")
 	Print("\thn 3 golang		// search golang topic for last 3 days (with 10+ points)")
-	Print("\thn 2 ai,llm		// search ai and llm topics for last 2 days (with 10+ points)")
-	Print("\thn 5 \"open source\"	// use dobule-quotes for search topic having multiple words")
+	Print("\thn 1 ai,llm		// search both ai and llm topics for last 1 days (with 10+ points)")
+	Print("\thn 2 \"open source\"	// use dobule-quotes for search topic having multiple words")
 	Print("")
-	Print("Usage: hn <days> <comma seperated search topics> -a")
+	Print("Usage-2: hn <days> <comma seperated search topics> -a")
 	Print("\thn 3 golang -a		// search golang topic for last 3 days (with 1+ points)")
 	Print("")
-	Print("Usage: hn <points>")
+	Print("Usage-3: hn <points>")
 	Print("\thn 200			// search any news from last 2 days with 200 to 300 points")
 	Print("\thn 500			// search any news from last 2 days with 500+ points")
-	Print("\thn 600			// search any news from last 2 days with 600+ points")
 }
 
 func searchByPoints(points int) {
@@ -81,17 +78,12 @@ func searchByPoints(points int) {
 	now := time.Now()
 	past := now.AddDate(0, 0, -days)
 
-	// https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981,points%3E500,points%3C1000
-
-	// var searchUrl string
 	var startPoints, endPoints int
 	if points < 500 {
-		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
 		endPoints = points + 100
 		Info("searching from last %d days, between %d to %d points", days, startPoints, endPoints)
 	} else {
-		// searchUrl = fmt.Sprintf(`%s?%s`, API_SEARCH_BY_DATE, `tags=story&numericFilters=created_at_i>%d,created_at_i<%d,points>=%d,points<=%d&page=%d`)
 		startPoints = points
 		endPoints = math.MaxInt
 		Info("searching from last %d days, %d+ points", days, startPoints)
@@ -101,14 +93,13 @@ func searchByPoints(points int) {
 	totalPosts := 0
 	sorted := true
 	for pageNo := 0; ; pageNo++ {
-		// urlPath := fmt.Sprintf(searchUrl, toSecond(past), toSecond(now), startPoints, endPoints, pageNo)
-
-		urlPath := API_SEARCH_BY_DATE +
+		// url=https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&numericFilters=created_at_i>1763489663,created_at_i<1763662463,points>200,points<300
+		url := API_SEARCH_BY_DATE +
 			fmt.Sprintf(`?tags=%s`, `story`) +
 			fmt.Sprintf(`&page=%d`, pageNo) +
 			fmt.Sprintf(`&numericFilters=%s`, url.QueryEscape(fmt.Sprintf(`created_at_i>%d,created_at_i<%d,points>%d,points<%d`, toSecond(past), toSecond(now), startPoints, endPoints)))
 
-		items := call(urlPath)
+		items := searchCall(url)
 		if len(items) == 0 {
 			break
 		}
@@ -127,8 +118,11 @@ func searchByPoints(points int) {
 			}
 			PrintHyperLink(url, "(link)")
 		}
+
 		totalPosts += len(items)
+
 		fmt.Printf("------ page=%d, posts=%d ------\n", (pageNo + 1), totalPosts)
+
 		if len(items) < 20 {
 			break
 		}
@@ -141,21 +135,19 @@ func searchByTopics(days int, topics []string, minPoints int) {
 	now := time.Now()
 	past := now.AddDate(0, 0, -days)
 
-	// searchUrl := fmt.Sprintf(`%s?%s%s`, API_SEARCH_BY_DATE, `tags=story&page=%d&`, url.QueryEscape(`query="%s"&numericFilters=created_at_i>%d,created_at_i<%d`))
-
 	for _, topic := range topics {
 		totalPosts := 0
 		fmt.Println()
 		fmt.Printf("** %s **\n", topic)
 		for pageNo := 0; ; pageNo++ {
-			// url := fmt.Sprintf(searchUrl, url.QueryEscape(topic), pageNo, toSecond(past), toSecond(now))
-			urlPath := API_SEARCH_BY_DATE +
+			// url=https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&query=golang&numericFilters=created_at_i>1763403219,created_at_i<1763662419
+			url := API_SEARCH_BY_DATE +
 				fmt.Sprintf(`?tags=%s`, `story`) +
 				fmt.Sprintf(`&page=%d`, pageNo) +
 				fmt.Sprintf(`&query=%s`, url.QueryEscape(topic)) +
 				fmt.Sprintf(`&numericFilters=%s`, url.QueryEscape(fmt.Sprintf(`created_at_i>%d,created_at_i<%d`, toSecond(past), toSecond(now))))
 
-			items := call(urlPath)
+			items := searchCall(url)
 			if len(items) == 0 {
 				break
 			}
@@ -193,50 +185,6 @@ func printItem(item *item) {
 		url = fmt.Sprintf(`https://news.ycombinator.com/item?id=%s`, item.ObjectID)
 	}
 	PrintHyperLink(url, "(link)")
-}
-
-func call(urlPath string) []*item {
-	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&query=%22java%22&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981&page=0`
-
-	// fmt.Println("url=", urlPath)
-	// urlPart := strings.Split(urlPath, `?`)
-	// urlPath = fmt.Sprintf(`%s?%s`, urlPart[0], url.QueryEscape(urlPart[1]))
-	// fmt.Println("url=", urlPath)
-
-	// fmt.Println("url=", urlPath)
-	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&query=%22java%22&numericFilters=created_at_i%3E1745692181,created_at_i%3C1745864981&page=0`
-	// urlPath = `https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0&query=%22java%22&numericFilters=created_at_i%3E1745695548,created_at_i%3C1745868348`
-	// fmt.Println("url=", urlPath)
-
-	client := http.Client{
-		Timeout: time.Second * 10,
-	}
-
-	resp, err := client.Get(urlPath)
-	if err != nil {
-		Err("search failed with error, %v", err)
-		os.Exit(1)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		Err("search failed with error, %s", resp.Status)
-		os.Exit(1)
-	}
-
-	defer resp.Body.Close()
-	content, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		Err("read search result failed with error, %v", err)
-		os.Exit(1)
-	}
-
-	items, err := parse(content)
-	if err != nil {
-		Err("parse search result failed with error, %v", err)
-		os.Exit(1)
-	}
-
-	return items
 }
 
 func toSecond(t time.Time) int64 {
