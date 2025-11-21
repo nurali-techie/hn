@@ -64,7 +64,7 @@ You could have below workflow for your daily news.
 
 Check below video.
 
-<video src="assets/hn_brave.mp4" width="960" height="720" controls></video>
+https://github.com/user-attachments/assets/b53d1e62-850f-4f55-a850-8b35bd042edf
 
 # Contribution
 
