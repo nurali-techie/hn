@@ -28,7 +28,7 @@ https://github.com/user-attachments/assets/b53d1e62-850f-4f55-a850-8b35bd042edf
 ### Linux
 
 ```
-wget -O hn https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-linux-amd64
+wget -O hn https://github.com/nurali-techie/hn/releases/download/v1.0.0/hn-linux-amd64
 chmod +x hn
 mv hn ~/.local/bin/
 ```
@@ -38,7 +38,7 @@ Use `hn` from terminal.
 ### Mac
 
 ```
-wget -O hn https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-darwin-amd64
+wget -O hn https://github.com/nurali-techie/hn/releases/download/v1.0.0/hn-darwin-amd64
 chmod +x hn
 ```
 
@@ -47,7 +47,7 @@ Use `./hn` from terminal.
 ### Windows
 
 ```
-wget -O hn.exe https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-windows-amd64.exe
+wget -O hn.exe https://github.com/nurali-techie/hn/releases/download/v1.0.0/hn-windows-amd64.exe
 ```
 
 Add folder path of `hn.exe` into your PATH variable under system environment variable; after that use `hn` from terminal.
