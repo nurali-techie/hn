@@ -56,7 +56,15 @@ Usage-3: hn <points>
 
 ## News Workflow
 
-![News workflow video](assets/hn_brave.webm)
+You could have below workflow for your daily news.
+
+- run `hn` tool with topics of your interest.
+- use (link) to open in brave browser.
+- use Leo AI to summarize the page.
+
+Check below video.
+
+<video src="assets/hn_brave.mp4" width="960" height="720" controls></video>
 
 # Contribution
 
