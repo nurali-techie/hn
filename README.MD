@@ -2,30 +2,65 @@
 **hn** stands for `HackerNews`, it is a command line tool to query hacker news effectively as per user preference.
 
 # Install
-Step1 - git clone
+
+## Linux
+
 ```
-git clone https://github.com/nurali-techie/hn.git
+wget -O hn https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-linux-amd64
+chmod +x hn
+mv hn ~/.local/bin/
 ```
 
-Step2 - install using go
+Use `hn` from terminal.
+
+## Mac
+
 ```
-cd hn
-go install
+wget -O hn https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-darwin-amd64
+chmod +x hn
 ```
+
+Use `./hn` from terminal.
+
+## Windows
+
+```
+wget -O hn.exe https://github.com/nurali-techie/hn/releases/download/v0.2.0/hn-windows-amd64.exe
+```
+
+Add folder path of `hn.exe` into your PATH variable under system environment variable; after that use `hn` from terminal.
 
 # Usage
+
+## Help
 ```
-Usage: hn <days> <comma seperated search terms>
-Example:
-	hn 5 golang
-	hn 3 devops,java
-	hn 2 "open source"
-	hn 7 "cloud native,microservices"
+$ hn
+Hello from HackerNews (link)
+
+Usage-1: hn <days> <comma seperated search topics>
+	hn 3 golang		// search golang topic for last 3 days (with 10+ points)
+	hn 1 ai,llm		// search both ai and llm topics for last 1 days (with 10+ points)
+	hn 2 "open source"	// use dobule-quotes for search topic having multiple words
+
+Usage-2: hn <days> <comma seperated search topics> -a
+	hn 3 golang -a		// search golang topic for last 3 days (with 1+ points)
+
+Usage-3: hn <points>
+	hn 200			// search any news from last 2 days with 200 to 300 points
+	hn 500			// search any news from last 2 days with 500+ points
 ```
 
-Note, the script requires root or sudo privileges to move 'hn' tool binary to `/usr/local/bin`.
+## Example
 
+![hn example screenshot](assets/example.png)
+
+## News Workflow
+
+![News workflow video](assets/hn_brave.webm)
+
+# Contribution
+
+Please help to test Mac and Windows installation.
 
 # References
 - HackerNews Search API - https://hn.algolia.com/api
-- Install script - https://github.com/ddosify/ddosify
